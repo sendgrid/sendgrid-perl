@@ -7,7 +7,6 @@ use Test::More;
 use MIME::Entity;
 use Mail::SendGrid;
 use Mail::SendGrid::Transport::SMTP;
-use Mock::Net::SMTP::TLS;
 
 sub getSGObject
 {

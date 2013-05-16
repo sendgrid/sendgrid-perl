@@ -11,17 +11,17 @@
 
 #   MakeMaker Parameters:
 
-#     AUTHOR => [q[Tim Jenkins <tim@sendgrid.com>, Tim Jenkins <tim@sendgrid.com>]]
-#     BUILD_REQUIRES => { Test::More=>q[0.42], ExtUtils::MakeMaker=>q[6.36] }
+#     AUTHOR => [q[Tim Jenkins <tim@sendgrid.com>]]
+#     BUILD_REQUIRES => { Test::MockObject=>q[0], Test::More=>q[0], ExtUtils::MakeMaker=>q[6.36] }
 #     CONFIGURE_REQUIRES => {  }
 #     DISTNAME => q[SendGrid]
 #     LICENSE => q[mit]
 #     NAME => q[SendGrid]
 #     NO_META => q[1]
-#     PREREQ_PM => { Test::More=>q[0.42], ExtUtils::MakeMaker=>q[6.36] }
+#     PREREQ_PM => { Test::MockObject=>q[0], URI::Escape=>q[0], ExtUtils::MakeMaker=>q[6.36], Net::SMTP::TLS=>q[0], Carp=>q[0], Encode=>q[0], Test::More=>q[0], LWP::UserAgent=>q[0], MIME::Entity=>q[0], Mail::Address=>q[0], JSON=>q[0], Sys::Hostname=>q[0] }
 #     TEST_REQUIRES => {  }
 #     VERSION => q[1.0]
-#     VERSION_FROM => q[lib/mail/SendGrid.pm]
+#     VERSION_FROM => q[lib/Mail/SendGrid.pm]
 #     dist => { PREOP=>q[$(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"] }
 #     realclean => { FILES=>q[MYMETA.yml] }
 
@@ -154,7 +154,7 @@ FULLEXT = SendGrid
 BASEEXT = SendGrid
 PARENT_NAME = 
 DLBASE = $(BASEEXT)
-VERSION_FROM = lib/mail/SendGrid.pm
+VERSION_FROM = lib/Mail/SendGrid.pm
 OBJECT = 
 LDFROM = $(OBJECT)
 LINKTYPE = dynamic
@@ -192,7 +192,8 @@ PERL_ARCHIVE       =
 PERL_ARCHIVE_AFTER = 
 
 
-TO_INST_PM = lib/Mail/SendGrid.pm \
+TO_INST_PM = lib/.DS_Store \
+	lib/Mail/SendGrid.pm \
 	lib/Mail/SendGrid/Header.pm \
 	lib/Mail/SendGrid/Transport/Local.pm \
 	lib/Mail/SendGrid/Transport/REST.pm \
@@ -209,6 +210,8 @@ PM_TO_BLIB = lib/Mail/SendGrid/Header.pm \
 	blib/lib/Mail/SendGrid.pm \
 	lib/Mail/SendGrid/Transport/Sendmail.pm \
 	blib/lib/Mail/SendGrid/Transport/Sendmail.pm \
+	lib/.DS_Store \
+	blib/lib/.DS_Store \
 	lib/Mail/SendGrid/Transport/SMTP.pm \
 	blib/lib/Mail/SendGrid/Transport/SMTP.pm
 
@@ -802,8 +805,17 @@ testdb_static :: testdb_dynamic
 ppd :
 	$(NOECHO) $(ECHO) '<SOFTPKG NAME="$(DISTNAME)" VERSION="$(VERSION)">' > $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <ABSTRACT></ABSTRACT>' >> $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) '    <AUTHOR>Tim Jenkins &lt;tim@sendgrid.com&gt;, Tim Jenkins &lt;tim@sendgrid.com&gt;</AUTHOR>' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '    <AUTHOR>Tim Jenkins &lt;tim@sendgrid.com&gt;</AUTHOR>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Carp::" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Encode::" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="JSON::" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="LWP::UserAgent" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="MIME::Entity" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Mail::Address" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Net::SMTP::TLS" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Sys::Hostname" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="URI::Escape" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="darwin-thread-multi-2level-5.12" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    </IMPLEMENTATION>' >> $(DISTNAME).ppd
@@ -819,6 +831,7 @@ pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	  lib/Mail/SendGrid/Transport/REST.pm blib/lib/Mail/SendGrid/Transport/REST.pm \
 	  lib/Mail/SendGrid.pm blib/lib/Mail/SendGrid.pm \
 	  lib/Mail/SendGrid/Transport/Sendmail.pm blib/lib/Mail/SendGrid/Transport/Sendmail.pm \
+	  lib/.DS_Store blib/lib/.DS_Store \
 	  lib/Mail/SendGrid/Transport/SMTP.pm blib/lib/Mail/SendGrid/Transport/SMTP.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 

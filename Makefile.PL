@@ -1,12 +1,23 @@
-  use inc::Module::Install;
-  
-  # Define metadata
-  name           'SendGrid';
-  all_from       'lib/Mail/SendGrid.pm';
-  version_from   'lib/mail/SendGrid.pm';
-  license        'MIT';
+use inc::Module::Install;
 
-  # Specific dependencies
-  test_requires  'Test::More'  => '0.42';
-  
-  WriteAll;
+# Define metadata
+name 'SendGrid';
+all_from 'lib/Mail/SendGrid.pm';
+license 'MIT';
+
+# Specific dependencies
+test_requires 'Test::More';
+test_requires 'Test::MockObject';
+
+requires 'Net::SMTP::TLS';
+requires 'Sys::Hostname';
+requires 'Carp';
+requires 'LWP::UserAgent';
+requires 'Mail::Address';
+requires 'Sys::Hostname';
+requires 'URI::Escape';
+requires 'JSON';
+requires 'Encode';
+requires 'MIME::Entity';
+
+WriteAll;
