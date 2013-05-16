@@ -1,0 +1,8 @@
+MANIFEST
+MANIFEST.skip
+META.yml
+MYMETA.yml
+MYMETA.json
+Makefile.old
+blib/
+inc/
