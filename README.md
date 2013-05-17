@@ -8,8 +8,14 @@ Licensed under the MIT License.
 We are currently working on getting this module on CPAN. In the
 meantime, you can install from the included archive.
 
-`sudo cpanm
-https://github.com/sendgrid/sendgrid-perl/raw/master/SendGrid-1.0.tar.gz` 
+    git clone https://github.com/sendgrid/sendgrid-perl.git
+    sudo cpanm SendGrid-1.0.tar.gz
+
+You can also build the archive yourself:
+    perl Makefile.PL
+    make
+    make test
+    make dist
 
 #Basic usage
 ```perl
