@@ -8,7 +8,7 @@ license 'MIT';
 # Specific dependencies
 test_requires 'Test::More';
 test_requires 'Test::MockObject';
-test_requires 'Test::Class::Load'
+test_requires 'Test::Class::Load';
 
 requires 'Net::SMTP::TLS';
 requires 'Sys::Hostname';
