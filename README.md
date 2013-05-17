@@ -1,5 +1,6 @@
 #sendgrid-perl
-Send emails via SendGrid. Provides wrapper for custom SMTP API fields.
+Send emails via SendGrid. Provides wrapper for custom SMTP API fields
+and allows for easy manipulation of filter/app settings.
 
 #License
 Licensed under the MIT License.
@@ -31,6 +32,18 @@ my $sg = Mail::SendGrid->new( from => "from\@example.com",
                                                   <a href="http://sendgrid.com">SG</a>
                                        </body></html>' );
 
+#disable click tracking filter for this request
+$sg->disableClickTracking();
+
+#turn on the unsubscribe filter here with custom values
+$sg->enableUnsubscribe( text => "Unsubscribe here: <% %>", html => "Unsubscribe <% here %>" );
+
+#set a category
+$sg->header->setCategory('first contact');
+
+#add unique arguments
+$sg->header->addUniqueIdentifier( customer => '12345', location => 'somewhere' );
+
 my $trans = Mail::SendGrid::Transport::SMTP->new( username =>
 'sendgrid_username', password => 'sendgrid_password' );
 
@@ -38,3 +51,5 @@ error = $trans->deliver($sg);
 die $error if ( $error );
 ```
 
+#Advanced Usage
+For more detailed information, please refer to the perldocs.
