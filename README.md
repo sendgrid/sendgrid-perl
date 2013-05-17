@@ -21,6 +21,9 @@ You can also build the archive yourself:
 
 #Basic usage
 ```perl
+use warnings;
+use strict;
+
 use Mail::SendGrid;
 use Mail::SendGrid::Transport::SMTP;
 
@@ -46,7 +49,7 @@ $sg->header->addUniqueIdentifier( customer => '12345', location => 'somewhere' )
 
 my $trans = Mail::SendGrid::Transport::SMTP->new( username => 'sendgrid_username', password => 'sendgrid_password' );
 
-$error = $trans->deliver($sg);
+my $error = $trans->deliver($sg);
 die $error if ( $error );
 ```
 
