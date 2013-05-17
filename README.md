@@ -24,8 +24,8 @@ You can also build the archive yourself:
 use Mail::SendGrid;
 use Mail::SendGrid::Transport::SMTP;
 
-my $sg = Mail::SendGrid->new( from => "from\@example.com",
-                              to => "to\@example.com",
+my $sg = Mail::SendGrid->new( from => 'from@example.com',
+                              to => 'to@example.com',
                               subject => 'Testing',
                               text => "Some text http://sendgrid.com/\n",
                               html => '<html><body>Some html
@@ -44,10 +44,9 @@ $sg->header->setCategory('first contact');
 #add unique arguments
 $sg->header->addUniqueIdentifier( customer => '12345', location => 'somewhere' );
 
-my $trans = Mail::SendGrid::Transport::SMTP->new( username =>
-'sendgrid_username', password => 'sendgrid_password' );
+my $trans = Mail::SendGrid::Transport::SMTP->new( username => 'sendgrid_username', password => 'sendgrid_password' );
 
-error = $trans->deliver($sg);
+$error = $trans->deliver($sg);
 die $error if ( $error );
 ```
 
