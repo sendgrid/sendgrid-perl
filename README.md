@@ -2,6 +2,8 @@
 Send emails via SendGrid. Provides wrapper for custom SMTP API fields
 and allows for easy manipulation of filter/app settings.
 
+Written by Tim Jenkins.
+
 #License
 Licensed under the MIT License.
 
