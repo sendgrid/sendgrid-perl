@@ -4,6 +4,7 @@ META.yml
 MYMETA.yml
 MYMETA.json
 Makefile.old
+Makefile
 pm_to_blib
 blib/
 inc/

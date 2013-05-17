@@ -195,15 +195,12 @@ PERL_ARCHIVE_AFTER =
 TO_INST_PM = lib/.DS_Store \
 	lib/Mail/SendGrid.pm \
 	lib/Mail/SendGrid/Header.pm \
-	lib/Mail/SendGrid/Transport/Local.pm \
 	lib/Mail/SendGrid/Transport/REST.pm \
 	lib/Mail/SendGrid/Transport/SMTP.pm \
 	lib/Mail/SendGrid/Transport/Sendmail.pm
 
 PM_TO_BLIB = lib/Mail/SendGrid/Header.pm \
 	blib/lib/Mail/SendGrid/Header.pm \
-	lib/Mail/SendGrid/Transport/Local.pm \
-	blib/lib/Mail/SendGrid/Transport/Local.pm \
 	lib/Mail/SendGrid/Transport/REST.pm \
 	blib/lib/Mail/SendGrid/Transport/REST.pm \
 	lib/Mail/SendGrid.pm \
@@ -827,7 +824,6 @@ ppd :
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
 	  lib/Mail/SendGrid/Header.pm blib/lib/Mail/SendGrid/Header.pm \
-	  lib/Mail/SendGrid/Transport/Local.pm blib/lib/Mail/SendGrid/Transport/Local.pm \
 	  lib/Mail/SendGrid/Transport/REST.pm blib/lib/Mail/SendGrid/Transport/REST.pm \
 	  lib/Mail/SendGrid.pm blib/lib/Mail/SendGrid.pm \
 	  lib/Mail/SendGrid/Transport/Sendmail.pm blib/lib/Mail/SendGrid/Transport/Sendmail.pm \
