@@ -12,6 +12,7 @@ meantime, you can install from the included archive.
     sudo cpanm SendGrid-1.0.tar.gz
 
 You can also build the archive yourself:
+    
     perl Makefile.PL
     make
     make test
