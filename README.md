@@ -6,10 +6,13 @@ Licensed under the MIT License.
 
 #Install
 We are currently working on getting this module on CPAN. In the
-meantime, you can install from the included archive. 
+meantime, you can install from the included archive.
+
+`sudo cpanm
+https://github.com/sendgrid/sendgrid-perl/raw/master/SendGrid-1.0.tar.gz` 
 
 #Basic usage
-`
+```perl
 use Mail::SendGrid;
 use Mail::SendGrid::Transport::SMTP;
 
@@ -26,6 +29,5 @@ my $trans = Mail::SendGrid::Transport::SMTP->new( username =>
 
 error = $trans->deliver($sg);
 #die $error if ( $error );
-`
-
+```
 
