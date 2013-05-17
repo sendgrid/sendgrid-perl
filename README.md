@@ -28,6 +28,6 @@ my $trans = Mail::SendGrid::Transport::SMTP->new( username =>
 'sendgrid_username', password => 'sendgrid_password' );
 
 error = $trans->deliver($sg);
-#die $error if ( $error );
+die $error if ( $error );
 ```
 
