@@ -29,7 +29,7 @@ use warnings;
 use strict;
 
 use Mail::SendGrid;
-use Mail::SendGrid::Transport::SMTP;
+use Mail::SendGrid::Transport::REST;
 
 my $sg = Mail::SendGrid->new( from => 'from@example.com',
                               to => 'to@example.com',
@@ -51,7 +51,7 @@ $sg->header->setCategory('first contact');
 #add unique arguments
 $sg->header->addUniqueIdentifier( customer => '12345', location => 'somewhere' );
 
-my $trans = Mail::SendGrid::Transport::SMTP->new( username => 'sendgrid_username', password => 'sendgrid_password' );
+my $trans = Mail::SendGrid::Transport::REST->new( username => 'sendgrid_username', password => 'sendgrid_password' );
 
 my $error = $trans->deliver($sg);
 die $error if ( $error );
