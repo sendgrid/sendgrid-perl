@@ -133,6 +133,16 @@ sub json : Test(2)
   is($properFold, 1, "proper folding");
 }
 
+sub asmGroupId : Test
+{
+  my $asmGroupId = 123;
+
+  my $hdr = Mail::SendGrid::Header->new();
+
+  $hdr->setASMGroupID($asmGroupId);
+
+  is($hdr->{data}->{asm_group_id}, $asmGroupId, "set ASM Group ID");
+}
 
 
 

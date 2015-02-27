@@ -122,6 +122,13 @@ sub addFilterSetting
   }
 }
 
+sub setASMGroupID
+{
+  my $self = shift;
+  my $asmGroupId = shift;
+  $self->{data}->{asm_group_id} = $asmGroupId;
+}
+
 sub addHeader
 {
   my $self = shift;
@@ -250,6 +257,13 @@ will happen in order added, so calls to this should match calls to addTo
   $hdr->addTo('you@myplace.com');
 
   $hdr->addSubVal('%name%', 'me', 'you');
+
+=head2 setASMGroupID
+
+This sets the ASM Group ID for this email. Please read the documentation here:
+https://sendgrid.com/docs/API_Reference/Web_API_v3/Advanced_Suppression_Manager/index.html
+
+  $hdr->setASMGroupID(123);
 
 =head2 asJSON
 
