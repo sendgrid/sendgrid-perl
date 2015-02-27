@@ -97,6 +97,14 @@ sub deliver
 
   $query .= "&x-smtpapi=" . uri_escape($hdr) if ( $hdr ne "{}" );
 
+  # mail headers
+  if (defined($sg->{'message-id'}))
+  {
+    my $json = new JSON;
+    $hdr = $json->encode( { 'message-id' => $sg->{'message-id'} } );
+    $query .= "&headers=" . uri_escape($hdr) if ( $hdr ne "{}" );
+  }
+
   # Text
   $query .= "&text=" . uri_escape($text) if ( defined($text) );
 
