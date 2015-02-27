@@ -1,13 +1,13 @@
 # Copyright(c) 2010 SendGrid
 
-package Mail::SendGrid;
+package Email::SendGrid;
 
 use strict;
 use vars qw($VERSION);
 
 $VERSION = '1.0';
 
-use Mail::SendGrid::Header;
+use Email::SendGrid::Header;
 use Mail::Address;
 use Encode;
 use MIME::Words qw(encode_mimeword decode_mimewords);
@@ -18,7 +18,7 @@ sub new
 {
   my $class = shift;
 
-  my $self = bless { header => Mail::SendGrid::Header->new(),
+  my $self = bless { header => Email::SendGrid::Header->new(),
                      rcpts => [],
                      to => [],
                      cc => [],
@@ -80,7 +80,7 @@ sub get
 
   my $fields = { date => 1, text => 1, html => 1, subject => 1, from => 1, 'reply-to' => 1,
                  encoding => 1, charset => 1, attachments => 1, mail_from => 1,
-                 to => 1, cc => 1, bcc => 1 };
+                 to => 1, cc => 1, bcc => 1, 'message-id' => 1 };
 
   croak "Unknown field '$field'" if ( !defined($fields->{$field}) );
 
@@ -97,7 +97,7 @@ sub set
   my $val = shift;
 
   my $fields = { date => 1, text => 1, html => 1, subject => 1, from => 1, 'reply-to' => 1,
-                 encoding => 1, charset => 1, attachments => 1 };
+                 encoding => 1, charset => 1, attachments => 1, 'message-id' => 1 };
 
   croak "Unknown field '$field'" if ( !defined($fields->{$field}) );
 

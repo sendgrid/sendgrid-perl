@@ -1,6 +1,6 @@
 # Copyright (c) 2010 SendGrid
 
-package Mail::SendGrid::Transport::Sendmail;
+package Email::SendGrid::Transport::Sendmail;
 
 use strict;
 use vars qw($VERSION);

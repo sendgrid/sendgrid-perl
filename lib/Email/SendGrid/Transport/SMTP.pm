@@ -1,6 +1,6 @@
 # Copyright (c) 2010 SendGrid
 
-package Mail::SendGrid::Transport::SMTP;
+package Email::SendGrid::Transport::SMTP;
 
 use strict;
 use warnings;

@@ -1,4 +1,4 @@
-package Mail::SendGrid::Header;
+package Email::SendGrid::Header;
 
 use strict;
 

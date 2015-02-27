@@ -1,6 +1,6 @@
 # Copyright (c) 2010 SendGrid
 
-package Mail::SendGrid::Transport::REST;
+package Email::SendGrid::Transport::REST;
 
 use strict;
 use vars qw($VERSION);
@@ -62,6 +62,7 @@ sub deliver
   my $text = $sg->get('text', encode => 1);
   my $html = $sg->get('html', encode => 1);
   my $date = $sg->get('date', encode => 1);
+  my $messageId = $sg->get('message-id', encode => 0);
   my $reply = $sg->get('reply-to', encode => 1);
   my $attachments = $sg->get('attachments', encode => 0);
 
@@ -114,7 +115,6 @@ sub deliver
 
     if ( -f $data )
     {
-      # XXX Need to extract to the basename
       $filename = $data;
       $data = q{}; 
       { 
@@ -130,6 +130,12 @@ sub deliver
     $query .= "&files[" . uri_escape(encode('utf8', $file)) . "]=" . uri_escape(encode('utf8', $data));
   }
 
+  # Other headers (currently just message-id)
+  my $additionalHeaders = {};
+
+  $additionalHeaders->{'message-id'} = $messageId if ( defined($messageId) );
+
+  $query .= "&headers=" . uri_escape(to_json($additionalHeaders, { ascii => 1})) if ( keys(%$additionalHeaders) );
   my $resp = $self->send($query);
 
   return undef if ( $resp->{message} eq "success" );

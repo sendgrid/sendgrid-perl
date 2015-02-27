@@ -1,23 +1,24 @@
-package Mail::SendGrid::Transport::REST::Test;
+package Email::SendGrid::Transport::REST::Test;
 
 use strict;
 use base qw(Test::Class);
 use Test::More;
+use Test::Deep;
 
 use MIME::Entity;
-use Mail::SendGrid;
-use Mail::SendGrid::Transport::REST;
+use Email::SendGrid;
+use Email::SendGrid::Transport::REST;
 use Test::MockObject::Extends;
 use URI::Escape;
 use Encode;
-
+use JSON;
 use Data::Dumper qw(Dumper);
 
 sub getTransport
 {
   my %args = @_;
 
-  my $obj = Mail::SendGrid::Transport::REST->new( username => 'u',
+  my $obj = Email::SendGrid::Transport::REST->new( username => 'u',
                                                   password => 'p' );
 
   my $mock = Test::MockObject::Extends->new($obj);
@@ -42,6 +43,7 @@ my $subject = 'subject';
 my $encoding = 'base64';
 my $charset = 'utf-8';
 my $date = '2010 08 18';
+my $messageId = "1234";
 
 sub getSGObject
 {
@@ -51,7 +53,7 @@ sub getSGObject
 
   $extra = $args{unicode} if ( $args{unicode} );
 
-  my $sg = Mail::SendGrid->new( from => "$extra$from",
+  my $sg = Email::SendGrid->new( from => "$extra$from",
                                 to => "$extra$to",
                                 subject => "$extra$subject",
                                 encoding => $encoding,
@@ -59,6 +61,7 @@ sub getSGObject
                                 text => "$extra$text",
                                 html => "$extra$html",
                                 'reply-to' => "$extra$to",
+                                "message-id" => $messageId,
                                 date => $date,
                               );
 
@@ -69,7 +72,7 @@ sub deliver : Test(no_plan)
 {
   my $deliv;
   my $sg;
-
+  my $attachData = "my attachment";
   $deliv = getTransport( 'send' => sub {
     my $self = shift;
     my $query = shift;
@@ -96,11 +99,14 @@ sub deliver : Test(no_plan)
     is($p->{'to[]'}, $toAddr, "to addr set");
     is($p->{'toname[]'}, $toName, "to name set");
 
+    my $hdrs = from_json($p->{headers});
+    cmp_deeply($hdrs, { "message-id" => $messageId }, "headers are included");
+    is($p->{"files[attachment1]"}, $attachData, "attachment included");
     return { "message" => "success" };
   });
 
   $sg = getSGObject();
-
+  $sg->addAttachment($attachData);
   $sg->enableClickTracking();
 
   my $res = $deliv->deliver($sg);

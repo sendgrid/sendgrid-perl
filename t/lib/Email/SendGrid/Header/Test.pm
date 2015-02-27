@@ -1,17 +1,18 @@
-package Mail::SendGrid::Header::Test;
+package Email::SendGrid::Header::Test;
 
 use strict;
 use base qw(Test::Class);
 use Test::More;
+use Test::Deep;
 
-use Mail::SendGrid::Header;
+use Email::SendGrid::Header;
 use JSON;
-
+use Encode;
 use Data::Dumper qw(Dumper);
 
 sub uniqueAgs : Test(2)
 {
-  my $hdr = Mail::SendGrid::Header->new();
+  my $hdr = Email::SendGrid::Header->new();
 
   $hdr->addUniqueIdentifier( foo => 'bar' );
 
@@ -28,7 +29,7 @@ sub category : Test
 {
   my $category = "foo";
 
-  my $hdr = Mail::SendGrid::Header->new();
+  my $hdr = Email::SendGrid::Header->new();
 
   $hdr->setCategory($category);
 
@@ -37,7 +38,7 @@ sub category : Test
 
 sub filterSettings : Test(7)
 {
-  my $hdr = Mail::SendGrid::Header->new();
+  my $hdr = Email::SendGrid::Header->new();
 
   $hdr->addFilterSetting('clicktrack', 'enable', 1);
 
@@ -74,7 +75,7 @@ sub mailmerge : Test(2)
   my $tag = 'name';
   my $val = 'Tim Jenkins';
 
-  my $hdr = Mail::SendGrid::Header->new();
+  my $hdr = Email::SendGrid::Header->new();
 
   $hdr->addTo($to);
 
@@ -87,7 +88,7 @@ sub mailmerge : Test(2)
 
 sub enabledisable : Test(2)
 {
-  my $hdr = Mail::SendGrid::Header->new();
+  my $hdr = Email::SendGrid::Header->new();
 
   $hdr->enable('clicktrack');
 
@@ -103,22 +104,25 @@ sub json : Test(2)
   my $filt = { filters =>
               { 'a' => { 'settings' => {'a' => 1}},
                'b' => { 'settings' => {'b' => 2, 'a' => 'foobarrrrr'}},
-               'c' => { 'settings' => {'str' => 'thisisaverylongstringthatdoesnothaveanyspacesinit'}}
+               'c' => { 'settings' => {'str' => 'thisisaverylongstringthatdoesnothaveanyspacesinit'}},
+               'u' => "Some unicode \x{f441}",
               }
   };
 
   my $filtJson = to_json($filt);
 
-  my $hdr = Mail::SendGrid::Header->new( data => $filt);
+  my $hdr = Email::SendGrid::Header->new( data => $filt);
 
   my $length = 30;
 
   my $json = $hdr->asJSON( fold => $length );
 
-  # Convert the returned string back into an object, then back to json for string comparison
-  my $jsonStr = to_json(from_json($json));
-
-  is($jsonStr, $filtJson, 'proper json conversion');
+  # Convert back to an object to compare
+  my $jsonCopy = $json;
+  $jsonCopy =~ s/\n//g;
+  my $obj = from_json($jsonCopy);
+  cmp_deeply($obj, $filt, "decodes to same object");
+  is($json, encode('utf8', $json), "json has no special characters");
 
   my @lines = split('\n', $json);
 
@@ -137,7 +141,7 @@ sub asmGroupId : Test
 {
   my $asmGroupId = 123;
 
-  my $hdr = Mail::SendGrid::Header->new();
+  my $hdr = Email::SendGrid::Header->new();
 
   $hdr->setASMGroupID($asmGroupId);
 

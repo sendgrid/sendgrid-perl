@@ -1,10 +1,10 @@
-package Mail::SendGrid::Test;
+package Email::SendGrid::Test;
 
 use strict;
 use base qw(Test::Class);
 use Test::More;
 
-use Mail::SendGrid;
+use Email::SendGrid;
 use Encode;
 
 use Data::Dumper qw(Dumper);
@@ -20,7 +20,7 @@ sub addresses : Test(12)
   my $encoding = 'base64';
   my $charset = 'utf-8';
 
-  my $sg = Mail::SendGrid->new( from => $from,
+  my $sg = Email::SendGrid->new( from => $from,
                                 to => $to,
                                 encoding => $encoding,
                                 charset => $charset,
@@ -37,31 +37,31 @@ sub addresses : Test(12)
   my @rcpts = $sg->getRecipients();
   ok(scalar(@rcpts) == 1 && $rcpts[0] eq $toAddr, "to address from string");
 
-  $sg = Mail::SendGrid->new( to => [ $to, $from ] );
+  $sg = Email::SendGrid->new( to => [ $to, $from ] );
 
   @rcpts = $sg->getRecipients();
   ok(scalar(@rcpts) == 2 && $rcpts[0] eq $toAddr && $rcpts[1] eq $fromAddr, "to address as array ref");
 
   # Check cc address
-  $sg = Mail::SendGrid->new( cc => "$to, $from" );
+  $sg = Email::SendGrid->new( cc => "$to, $from" );
 
   @rcpts = $sg->getRecipients();
   ok(scalar(@rcpts) == 2 && $rcpts[0] eq $toAddr && $rcpts[1] eq $fromAddr, "cc address as string");
 
 
-  $sg = Mail::SendGrid->new( cc => [ $to, $from ] );
+  $sg = Email::SendGrid->new( cc => [ $to, $from ] );
 
   @rcpts = $sg->getRecipients();
   ok(scalar(@rcpts) == 2 && $rcpts[0] eq $toAddr && $rcpts[1] eq $fromAddr, "cc address as array ref");
 
   # Check bcc address
-  $sg = Mail::SendGrid->new( bcc => "$to, $from" );
+  $sg = Email::SendGrid->new( bcc => "$to, $from" );
 
   @rcpts = $sg->getRecipients();
   ok(scalar(@rcpts) == 2 && $rcpts[0] eq $toAddr && $rcpts[1] eq $fromAddr, "bcc address as string");
 
 
-  $sg = Mail::SendGrid->new( bcc => [ $to, $from ] );
+  $sg = Email::SendGrid->new( bcc => [ $to, $from ] );
 
   @rcpts = $sg->getRecipients();
   ok(scalar(@rcpts) == 2 && $rcpts[0] eq $toAddr && $rcpts[1] eq $fromAddr, "bcc address as array ref");
@@ -77,7 +77,7 @@ sub addresses : Test(12)
   my @realrcpts = @$toad;
   push(@realrcpts, @$ccad, @$bccad);
 
-  $sg = Mail::SendGrid->new( to => $toa, cc => $cca, bcc => $bcca,
+  $sg = Email::SendGrid->new( to => $toa, cc => $cca, bcc => $bcca,
                              from => $from,
                              text => $text,
                              html => $html,
@@ -122,7 +122,7 @@ sub multipart : Test(4)
   my $encoding = 'base64';
   my $charset = 'utf-8';
 
-  my $sg = Mail::SendGrid->new( from => $from,
+  my $sg = Email::SendGrid->new( from => $from,
                                 to => $to,
                                 encoding => $encoding,
                                 charset => $charset,
@@ -152,7 +152,7 @@ sub textonly : Test(3)
   my $encoding = 'base64';
   my $charset = 'utf-8';
 
-  my $sg = Mail::SendGrid->new( from => $from,
+  my $sg = Email::SendGrid->new( from => $from,
                                 to => $to,
                                 encoding => $encoding,
                                 charset => $charset,
@@ -178,7 +178,7 @@ sub htmlonly : Test(3)
   my $encoding = 'base64';
   my $charset = 'utf-8';
 
-  my $sg = Mail::SendGrid->new( from => $from,
+  my $sg = Email::SendGrid->new( from => $from,
                                 to => $to,
                                 encoding => $encoding,
                                 charset => $charset,
@@ -200,7 +200,7 @@ sub headers : Test(4)
   my $msgId = 'msg-id';
   my $text = "some text";
 
-  my $sg = Mail::SendGrid->new( subject => $subject,
+  my $sg = Email::SendGrid->new( subject => $subject,
                                 date => $date,
                                 'message-id' => $msgId,
                                 text => $text );
@@ -219,7 +219,7 @@ sub headers : Test(4)
   is($m, $msgId, 'message id as paramter');
 
   # Test subject set method
-  $sg = Mail::SendGrid->new( text => $text );
+  $sg = Email::SendGrid->new( text => $text );
   $sg->set('subject', $subject);
 
   $mime = $sg->createMimeMessage();
@@ -241,7 +241,7 @@ sub unicode : Test(7)
   my $subject = "subject \x{f441}";
   my $reply = "some reply \x{411}";
 
-  my $sg = Mail::SendGrid->new( from => $from,
+  my $sg = Email::SendGrid->new( from => $from,
                                 to => $to,
                                 subject => $subject,
                                 encoding => $encoding,
@@ -311,7 +311,7 @@ sub attachments : Test(no_plan)
   my $encoding = 'quoted-printable';
   my $charset = 'utf-8';
 
-  my $sg = Mail::SendGrid->new( from => $from,
+  my $sg = Email::SendGrid->new( from => $from,
                                 to => $to,
                                 encoding => $encoding,
                                 charset => $charset,
@@ -334,7 +334,7 @@ sub attachments : Test(no_plan)
 
 sub filterShortcuts : Test(no_plan)
 {
-  my $sg = Mail::SendGrid->new();
+  my $sg = Email::SendGrid->new();
 
   # click tracking
   $sg->enableClickTracking( text => 1 );
@@ -432,7 +432,7 @@ sub filterShortcuts : Test(no_plan)
   is($sg->header->{data}->{filters}->{domainkeys}->{settings}->{enable}, 0, 'disable domainkeys');
 
   # Template
-  $sg = Mail::SendGrid->new();
+  $sg = Email::SendGrid->new();
   $sg->enableTemplate( html => 'html<% %>' );
   is($sg->header->{data}->{filters}->{template}->{settings}->{enable}, 1, 'enable template');
   is($sg->header->{data}->{filters}->{template}->{settings}->{'text/html'}, 'html<% %>', 'template html');
@@ -448,7 +448,7 @@ sub filterShortcuts : Test(no_plan)
   ok($@ =~ /Missing body/, 'template html tag validation');
 
   # Twitter
-  $sg = Mail::SendGrid->new();
+  $sg = Email::SendGrid->new();
   $sg->enableTwitter( username => 'user', password => 'pass' );
   is($sg->header->{data}->{filters}->{twitter}->{settings}->{enable}, 1, 'enable twitter');
   is($sg->header->{data}->{filters}->{twitter}->{settings}->{username}, 'user', 'twitter username');
@@ -465,7 +465,7 @@ sub filterShortcuts : Test(no_plan)
   is($sg->header->{data}->{filters}->{twitter}->{settings}->{enable}, 0, 'disable twitter');
 
   # BCC
-  $sg = Mail::SendGrid->new();
+  $sg = Email::SendGrid->new();
   $sg->enableBcc( email => 'email' );
   is($sg->header->{data}->{filters}->{bcc}->{settings}->{enable}, 1, 'enable bcc');
   is($sg->header->{data}->{filters}->{bcc}->{settings}->{email}, 'email', 'bcc email');
@@ -475,7 +475,7 @@ sub filterShortcuts : Test(no_plan)
   ok($@ =~ /email/, 'bcc email validation');
 
   # Bypass list management
-  $sg = Mail::SendGrid->new();
+  $sg = Email::SendGrid->new();
   $sg->enableBypassListManagement();
   is($sg->header->{data}->{filters}->{bypass_list_management}->{settings}->{enable}, 1,
     'enable bypass list management');
