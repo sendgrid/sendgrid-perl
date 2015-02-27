@@ -24,7 +24,7 @@ sub new
                      cc => [],
                      bcc => [],
                      attachments => [],
-                     encodiing => 'quoted-printable',
+                     encoding => 'quoted-printable',
                      charset => 'UTF-8',
                      @_ }, $class;
 
