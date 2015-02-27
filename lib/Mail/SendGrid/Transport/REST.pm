@@ -14,14 +14,14 @@ use URI::Escape;
 use JSON;
 use Encode;
 use Carp;
-
+use English qw( -no_match_vars ); 
 use Data::Dumper qw(Dumper);
 
 sub new
 {
   my $class = shift;
 
-  my $self = bless { server => 'sendgrid.com',
+  my $self = bless { server => 'api.sendgrid.com',
                      path => '/api/mail.send.json',
                      timeout => 30,
                      @_,
@@ -63,6 +63,7 @@ sub deliver
   my $html = $sg->get('html', encode => 1);
   my $date = $sg->get('date', encode => 1);
   my $reply = $sg->get('reply-to', encode => 1);
+  my $attachments = $sg->get('attachments', encode => 0);
 
   # Build the query
 
@@ -102,6 +103,32 @@ sub deliver
 
   # html
   $query .= "&html=" . uri_escape($html) if ( defined($html) );
+
+  my $i = 0;
+  # Attachments
+  foreach my $attach ( @$attachments )
+  {
+    my $filename = "attachment" . ++$i;
+    my $data = $attach->{data};
+    my %params;
+
+    if ( -f $data )
+    {
+      # XXX Need to extract to the basename
+      $filename = $data;
+      $data = q{}; 
+      { 
+         local $RS = undef; # this makes it just read the whole thing,
+         my $fh; 
+         croak "Can't open $filename: $!\n" if not open $fh, '<', $filename;
+         $data = <$fh>; 
+         croak 'Some Error During Close :/ ' if not close $fh;
+      }
+    }
+    my @path = split('/', $filename);
+    my $file = $path[$#path];
+    $query .= "&files[" . uri_escape(encode('utf8', $file)) . "]=" . uri_escape(encode('utf8', $data));
+  }
 
   my $resp = $self->send($query);
 
