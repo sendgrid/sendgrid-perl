@@ -115,7 +115,7 @@ sub send
   my $self = shift;
   my $query = shift;
 
-  my $ua = LWP::UserAgent->new( timeout => $self->{timeout} );
+  my $ua = LWP::UserAgent->new( timeout => $self->{timeout}, agent => 'sendgrid/' . $VERSION . ';perl' );
 
   my $response = $ua->get($query);
 
