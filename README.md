@@ -14,7 +14,7 @@ We are currently working on getting this module on CPAN. In the
 meantime, you can install from the included archive.
 
     git clone https://github.com/sendgrid/sendgrid-perl.git
-    sudo cpanm SendGrid-1.0.tar.gz
+    sudo cpanm SendGrid-1.1.tar.gz
 
 You can also build the archive yourself:
     
@@ -28,10 +28,10 @@ You can also build the archive yourself:
 use warnings;
 use strict;
 
-use Mail::SendGrid;
-use Mail::SendGrid::Transport::REST;
+use Email::SendGrid;
+use Email::SendGrid::Transport::REST;
 
-my $sg = Mail::SendGrid->new( from => 'from@example.com',
+my $sg = Email::SendGrid->new( from => 'from@example.com',
                               to => 'to@example.com',
                               subject => 'Testing',
                               text => "Some text http://sendgrid.com/\n",
@@ -51,7 +51,7 @@ $sg->header->setCategory('first contact');
 #add unique arguments
 $sg->header->addUniqueIdentifier( customer => '12345', location => 'somewhere' );
 
-my $trans = Mail::SendGrid::Transport::REST->new( username => 'sendgrid_username', password => 'sendgrid_password' );
+my $trans = Email::SendGrid::Transport::REST->new( username => 'sendgrid_username', password => 'sendgrid_password' );
 
 my $error = $trans->deliver($sg);
 die $error if ( $error );
