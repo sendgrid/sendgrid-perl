@@ -14,6 +14,7 @@ requires 'Net::SMTP::TLS';
 requires 'Sys::Hostname';
 requires 'Carp';
 requires 'LWP::UserAgent';
+requires 'LWP::Protocol::https';
 requires 'Mail::Address';
 requires 'Sys::Hostname';
 requires 'URI::Escape';
