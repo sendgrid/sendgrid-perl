@@ -2,7 +2,7 @@ use inc::Module::Install;
 
 # Define metadata
 name 'SendGrid';
-all_from 'lib/Mail/SendGrid.pm';
+all_from 'lib/Email/SendGrid.pm';
 license 'MIT';
 
 # Specific dependencies
