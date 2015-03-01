@@ -1,11 +1,11 @@
 # Copyright (c) 2010 SendGrid
 
-package Mail::SendGrid::Transport::REST;
+package Email::SendGrid::Transport::REST;
 
 use strict;
 use vars qw($VERSION);
 
-$VERSION = '1.0';
+$VERSION = '1.1';
 
 use LWP::UserAgent;
 use Mail::Address;
@@ -14,14 +14,14 @@ use URI::Escape;
 use JSON;
 use Encode;
 use Carp;
-
+use English qw( -no_match_vars ); 
 use Data::Dumper qw(Dumper);
 
 sub new
 {
   my $class = shift;
 
-  my $self = bless { server => 'sendgrid.com',
+  my $self = bless { server => 'api.sendgrid.com',
                      path => '/api/mail.send.json',
                      timeout => 30,
                      @_,
@@ -62,7 +62,9 @@ sub deliver
   my $text = $sg->get('text', encode => 1);
   my $html = $sg->get('html', encode => 1);
   my $date = $sg->get('date', encode => 1);
+  my $messageId = $sg->get('message-id', encode => 0);
   my $reply = $sg->get('reply-to', encode => 1);
+  my $attachments = $sg->get('attachments', encode => 0);
 
   # Build the query
 
@@ -103,6 +105,37 @@ sub deliver
   # html
   $query .= "&html=" . uri_escape($html) if ( defined($html) );
 
+  my $i = 0;
+  # Attachments
+  foreach my $attach ( @$attachments )
+  {
+    my $filename = "attachment" . ++$i;
+    my $data = $attach->{data};
+    my %params;
+
+    if ( -f $data )
+    {
+      $filename = $data;
+      $data = q{}; 
+      { 
+         local $RS = undef; # this makes it just read the whole thing,
+         my $fh; 
+         croak "Can't open $filename: $!\n" if not open $fh, '<', $filename;
+         $data = <$fh>; 
+         croak 'Some Error During Close :/ ' if not close $fh;
+      }
+    }
+    my @path = split('/', $filename);
+    my $file = $path[$#path];
+    $query .= "&files[" . uri_escape(encode('utf8', $file)) . "]=" . uri_escape(encode('utf8', $data));
+  }
+
+  # Other headers (currently just message-id)
+  my $additionalHeaders = {};
+
+  $additionalHeaders->{'message-id'} = $messageId if ( defined($messageId) );
+
+  $query .= "&headers=" . uri_escape(to_json($additionalHeaders, { ascii => 1})) if ( keys(%$additionalHeaders) );
   my $resp = $self->send($query);
 
   return undef if ( $resp->{message} eq "success" );

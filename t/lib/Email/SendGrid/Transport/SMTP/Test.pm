@@ -1,12 +1,12 @@
-package Mail::SendGrid::Transport::SMTP::Test;
+package Email::SendGrid::Transport::SMTP::Test;
 
 use strict;
 use base qw(Test::Class);
 use Test::More;
 
 use MIME::Entity;
-use Mail::SendGrid;
-use Mail::SendGrid::Transport::SMTP;
+use Email::SendGrid;
+use Email::SendGrid::Transport::SMTP;
 
 sub getSGObject
 {
@@ -19,7 +19,7 @@ sub getSGObject
   my $encoding = 'base64';
   my $charset = 'utf-8';
 
-  my $sg = Mail::SendGrid->new( from => $from,
+  my $sg = Email::SendGrid->new( from => $from,
                                 to => $to,
                                 encoding => $encoding,
                                 charset => $charset,
@@ -33,7 +33,7 @@ sub getSGObject
 sub delivery : Test()
 {
   my $smtp = Mock::Net::SMTP::TLS->create();
-  my $deliv = Mail::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
+  my $deliv = Email::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
                                              'password' => 'testing',
                                              'smtp_class' => $smtp
                                              );
@@ -54,7 +54,7 @@ sub connection_refused : Test()
       sub { die "Connect failed :IO::Socket::INET: connect: Connection refused"; }
       );
 
-  my $deliv = Mail::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
+  my $deliv = Email::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
                                              'password' => 'testing',
                                              'smtp_class' => $smtp
                                              );
@@ -72,7 +72,7 @@ sub unknown_host : Test
       sub { die "Connect failed :IO::Socket::INET: Bad hostname '$_[1]'"; }
       );
 
-  my $deliv = Mail::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
+  my $deliv = Email::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
                                              'password' => 'testing',
                                              'smtp_class' => $smtp
                                              );
@@ -90,7 +90,7 @@ sub failed_authentication : Test
       sub { die "Auth failed: 535 5.7.8 Error: authentication failed: authentication failure"; }
       );
 
-  my $deliv = Mail::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
+  my $deliv = Email::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
                                              'password' => 'testing',
                                              'smtp_class' => $smtp
                                              );
@@ -110,7 +110,7 @@ sub from_rejection : Test
     die "Couldn't send MAIL <$from> 5.7.1 Relay denied"; }
       );
 
-  my $deliv = Mail::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
+  my $deliv = Email::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
                                              'password' => 'testing',
                                              'smtp_class' => $smtp
                                              );
@@ -130,7 +130,7 @@ sub to_rejection : Test
     die "Couldn't send TO <$to>: 554 5.7.1 <unknown[10.8.49.102]>: Client host rejected: Access denied";
   });
 
-  my $deliv = Mail::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
+  my $deliv = Email::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
                                              'password' => 'testing',
                                              'smtp_class' => $smtp
                                              );
@@ -148,7 +148,7 @@ sub data_error : Test
     die "An error occurred during DATA";
   });
 
-  my $deliv = Mail::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
+  my $deliv = Email::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
                                              'password' => 'testing',
                                              'smtp_class' => $smtp
                                              );
@@ -166,7 +166,7 @@ sub datasend_error : Test
     die "An error occurred during datasend";
   });
 
-  my $deliv = Mail::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
+  my $deliv = Email::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
                                              'password' => 'testing',
                                              'smtp_class' => $smtp
                                              );
@@ -184,7 +184,7 @@ sub dataend_error : Test
     die "An error occurred during dataend";
   });
 
-  my $deliv = Mail::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
+  my $deliv = Email::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
                                              'password' => 'testing',
                                              'smtp_class' => $smtp
                                              );
@@ -203,7 +203,7 @@ sub quit_error : Test
     die "An error occurred disconnecting from the mail server";
   });
 
-  my $deliv = Mail::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
+  my $deliv = Email::SendGrid::Transport::SMTP->new( 'username' => 'tim@sendgrid.net',
                                              'password' => 'testing',
                                              'smtp_class' => $smtp
                                              );

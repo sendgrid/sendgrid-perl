@@ -1,4 +1,4 @@
-package Mail::SendGrid::Header;
+package Email::SendGrid::Header;
 
 use strict;
 
@@ -146,6 +146,7 @@ sub asJSON
   my $json = JSON->new;
   $json->space_before(1);
   $json->space_after(1);
+  $json->ascii(1);
   my $str = $json->encode($self->{data});
   if ( $args{fold} )
   {
