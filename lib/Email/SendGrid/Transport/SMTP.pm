@@ -6,7 +6,7 @@ use strict;
 use warnings;
 use vars qw($VERSION);
 
-$VERSION = '1.0';
+$VERSION = '1.1';
 
 use Net::SMTP::TLS;
 use Sys::Hostname;
