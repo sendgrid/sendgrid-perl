@@ -84,16 +84,16 @@ sub deliver
 
 =head1 NAME
 
-Mail::SendGrid::Transport::SMTP - SMTP Transport class to SendGrid
+Email::SendGrid::Transport::SMTP - SMTP Transport class to SendGrid
 
 =head1 SYNOPSIS
 
-  use Mail::SendGrid::Transport::SMTP;
-  use Mail::SendGrid;
+  use Email::SendGrid::Transport::SMTP;
+  use Email::SendGrid;
 
-  my $sg = Mail::SendGrid->new();
+  my $sg = Email::SendGrid->new();
   ...
-  my $trans = Mail::SendGrid::Transport::SMTP->new( username => 'mysuername',
+  my $trans = Email::SendGrid::Transport::SMTP->new( username => 'mysuername',
                                                     password => 'mypassword' );
 
   my $error = $trans->deliver($sg);
@@ -103,7 +103,7 @@ Mail::SendGrid::Transport::SMTP - SMTP Transport class to SendGrid
 
 This is a transport module for sending messages through the SendGrid email
 distribution system via SMTP. After you have completed building your
-Mail::SendGrid object, use this class to make a connection to SendGrid's
+Email::SendGrid object, use this class to make a connection to SendGrid's
 SMTP servers and deliver the message.
 
 =head1 CLASS METHODS
@@ -151,7 +151,7 @@ to use the local system hostname
 
 =head2 deliver(object)
 
-Delivers the Mail::SendGrid object specified. This will return undef on
+Delivers the Email::SendGrid object specified. This will return undef on
 success, and the failure reason on error
 
 =head1 AUTHOR

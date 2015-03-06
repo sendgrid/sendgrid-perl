@@ -160,14 +160,14 @@ sub asJSON
 
 =head1 NAME
 
-Mail::SendGrid::Header - Functions for building the string necessary for
+Email::SendGrid::Header - Functions for building the string necessary for
 working with SendGrid's SMTP API
 
 =head1 SYNOPSIS
 
-  use Mail::SendGrid::Header;
+  use Email::SendGrid::Header;
 
-  my $hdr = Mail::SendGrid::Header->new();
+  my $hdr = Email::SendGrid::Header->new();
   $hdr->setCategory('first contact');
   $hdr->addUniqueIdentifier( customer_id => 4 );
   my $str = $hdr->asJSON( fold => 72 );

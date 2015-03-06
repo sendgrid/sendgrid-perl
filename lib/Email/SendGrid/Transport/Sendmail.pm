@@ -58,16 +58,16 @@ sub openSendmail
 
 =head1 NAME
 
-Mail::SendGrid::Transport::Sendmail - Transport class for SendGrid using local sendmail
+Email::SendGrid::Transport::Sendmail - Transport class for SendGrid using local sendmail
 
 =head1 SYNOPSIS
 
-  use Mail::SendGrid::Transport::Sendmail;
-  use Mail::SendGrid;
+  use Email::SendGrid::Transport::Sendmail;
+  use Email::SendGrid;
 
-  my $sg = Mail::SendGrid->new();
+  my $sg = Email::SendGrid->new();
   ...
-  my $trans = Mail::SendGrid::Transport::Sendmail' );
+  my $trans = Email::SendGrid::Transport::Sendmail' );
 
   my $error = $trans->deliver($sg);
   die $error if ( $error );
@@ -76,7 +76,7 @@ Mail::SendGrid::Transport::Sendmail - Transport class for SendGrid using local s
 
 This is a transport module for sending messages through the SendGrid email
 distribution system via your local sendmail application. After you have
-completed building your Mail::SendGrid object, use this class to queue
+completed building your Email::SendGrid object, use this class to queue
 the message to your local system, which should be set up to relay mail
 through SendGrid's servers
 
@@ -98,7 +98,7 @@ as the sendmail paramter
 
 =head2 deliver(object)
 
-Delivers the Mail::SendGrid object specified. This will return undef on
+Delivers the Email::SendGrid object specified. This will return undef on
 success, and the failure reason on error
 
 =head1 AUTHOR

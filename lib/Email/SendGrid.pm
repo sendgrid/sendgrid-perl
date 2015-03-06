@@ -494,14 +494,14 @@ sub DESTROY
 
 =head1 NAME
 
-Mail::SendGrid - Class for building a message to be sent through the SendGrid
+Email::SendGrid - Class for building a message to be sent through the SendGrid
 mail service
 
 =head1 SYNOPSIS
 
-    use Mail::SendGrid
+    use Email::SendGrid
 
-    my $sg = Mail::SendGrid->new( from => $from,
+    my $sg = Email::SendGrid->new( from => $from,
                                   to => $to,
                                   subject => 'Testing',
                                   text => "Some text http://sendgrid.com/\n",
@@ -517,7 +517,7 @@ mail service
 
 This module allows for easy integration with the SendGrid email distribution
 service and its SMTP API. It allows you to build up the pieces that make the
-email itself, and then pass this object to the Mail::SendGrid::Transport class
+email itself, and then pass this object to the Email::SendGrid::Transport class
 that you wish to use for final delivery.
 
 =head1 CLASS METHODS
@@ -627,7 +627,7 @@ http://wiki.sendgrid.com/doku.php?id=smtp_api
 
 =head3 header
 
-Returns a reference to the Mail::SendGrid::Header object used to communicate
+Returns a reference to the Email::SendGrid::Header object used to communicate
 with the SMTP API. Useful if you want to set unique identifiers or use the
 mail merge functionality
 
@@ -805,7 +805,7 @@ Allows you to set twitter username / password information for this email.
 The Twitter filter can be used to send either status updates or direct
 messages, based on the recipient email address
 
-  my $sg = Mail::SendGrid->new( to => 'sendgrid@twitter', text => "My update" );
+  my $sg = Email::SendGrid->new( to => 'sendgrid@twitter', text => "My update" );
 
   $sg->enableTwitter( username => 'myusername', password => 'mypassword' );
 
@@ -827,7 +827,7 @@ notifications, that should always be attempted for delivery.
 
 =head2 Transport methods
 
-If you don't want to use one of the Mail::SendGrid::Transport classes, or
+If you don't want to use one of the Email::SendGrid::Transport classes, or
 want to build your own, these methods are used to get the data for transport
 
 =head3 createMimeMessage
