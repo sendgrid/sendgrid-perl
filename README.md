@@ -14,7 +14,8 @@ We are currently working on getting this module on CPAN. In the
 meantime, you can install from the included archive.
 
     git clone https://github.com/sendgrid/sendgrid-perl.git
-    sudo cpanm SendGrid-1.1.tar.gz
+    cd sendgrid-perl
+    sudo cpanm SendGrid-1.2.tar.gz
 
 You can also build the archive yourself:
     
