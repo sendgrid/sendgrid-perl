@@ -9,6 +9,7 @@ use MIME::Entity;
 use Email::SendGrid;
 use Email::SendGrid::Transport::REST;
 use Test::MockObject::Extends;
+use Test::MockModule;
 use URI::Escape;
 use Encode;
 use JSON;
@@ -66,6 +67,25 @@ sub getSGObject
                               );
 
   return $sg;
+}
+
+sub create : Test(no_plan)
+{
+  eval {
+    my $trans = Email::SendGrid::Transport::REST->new( username => 'u' );
+  };
+  ok($@ =~ /Must speicfy username\/password or api key at/, "only providing username generated error");
+
+  eval {
+    my $trans = Email::SendGrid::Transport::REST->new( password => 'u' );
+  };
+  ok($@ =~ /Must speicfy username\/password or api key at/, "only providing password generated error");
+
+  eval {
+    my $trans = Email::SendGrid::Transport::REST->new( username => 'u', api_key => 'k' );
+  };
+  ok($@ =~ /Must only specify username\/password or api key, not both at/, "providing username and api key generated error");
+
 }
 
 sub deliver : Test(no_plan)
@@ -171,4 +191,93 @@ sub deliveryError : Test
   is($res, "errormsg", 'error handling');
 }
 
+sub send_up : Test(no_plan)
+{
+  my $deliv = Test::MockObject::Extends->new(Email::SendGrid::Transport::REST->new(username => 'u', password => 'p'));
+  my $content = { value => 1 };
+  my $response = HTTP::Response->new('200', "ok", [], to_json($content));
+  my $mm = Test::MockModule->new('LWP::UserAgent');
+  my $obj;
+  $mm->mock('new' => sub {
+    $obj = Test::MockObject->new();
+    $obj->set_always('default_header' => 1);
+    $obj->mock('get' => sub { return $response } );
+    return $obj;
+    });
+
+  my $query = "query";
+  my $resp = $deliv->send($query);
+
+  cmp_deeply($resp, $content, "sent");
+  my ($func, $args) = $obj->next_call();
+  is($func, 'get', "made call to get");
+  shift(@$args);
+  cmp_deeply($args, [$query], " with proper args");
+  
+  ($func, $args) = $obj->next_call();
+  is($func, undef, "all lwp calls accounted for");
+
+  $response = HTTP::Response->new('403', 'bad error');
+  $resp = $deliv->send($query);
+  cmp_deeply($resp, {errors => ['403 bad error']}, "error returned" );
+
+  ($func, $args) = $obj->next_call();
+  is($func, 'get', "made call to get");
+  shift(@$args);
+  cmp_deeply($args, [$query], " with proper args");
+  
+  ($func, $args) = $obj->next_call();
+  is($func, undef, "all lwp calls accounted for");
+
+}
+
+sub send_apikey : Test(no_plan)
+{
+  my $deliv = Test::MockObject::Extends->new(Email::SendGrid::Transport::REST->new(api_key => 'k'));
+  my $content = { value => 1 };
+  my $response = HTTP::Response->new('200', "ok", [], to_json($content));
+  my $mm = Test::MockModule->new('LWP::UserAgent');
+  my $obj;
+  $mm->mock('new' => sub {
+    $obj = Test::MockObject->new();
+    $obj->set_always('default_header' => 1);
+    $obj->mock('get' => sub { return $response } );
+    return $obj;
+    });
+
+  my $query = "query";
+  my $resp = $deliv->send($query);
+
+  cmp_deeply($resp, $content, "sent");
+  my ($func, $args) = $obj->next_call();
+  is($func, 'default_header', "made call to set header");
+  shift(@$args);
+  cmp_deeply($args,['Authorization','Bearer k'], " with proper api key header");
+
+  ($func, $args) = $obj->next_call();  
+  is($func, 'get', "made call to get");
+  shift(@$args);
+  cmp_deeply($args, [$query], " with proper args");
+  
+  ($func, $args) = $obj->next_call();
+  is($func, undef, "all lwp calls accounted for");
+
+  $response = HTTP::Response->new('403', 'bad error');
+  $resp = $deliv->send($query);
+  cmp_deeply($resp, {errors => ['403 bad error']}, "error returned" );
+
+  ($func, $args) = $obj->next_call();
+  is($func, 'default_header', "made call to set header");
+  shift(@$args);
+  cmp_deeply($args,['Authorization','Bearer k'], " with proper api key header");
+
+  ($func, $args) = $obj->next_call();
+  is($func, 'get', "made call to get");
+  shift(@$args);
+  cmp_deeply($args, [$query], " with proper args");
+  
+  ($func, $args) = $obj->next_call();
+  is($func, undef, "all lwp calls accounted for");
+
+}
 1;

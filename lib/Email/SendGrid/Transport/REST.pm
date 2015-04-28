@@ -27,6 +27,16 @@ sub new
                      @_,
                     }, $class;
 
+  if ( defined($self->{username}) && defined($self->{api_key}) )
+  {
+    die "Must only specify username/password or api key, not both";
+  }
+
+  if ( !(defined($self->{username}) && defined($self->{password})) && !defined($self->{api_key}) )
+  {
+    die "Must speicfy username/password or api key";
+  }
+
   return $self;
 }
 
@@ -69,7 +79,10 @@ sub deliver
   # Build the query
 
   my $query = 'https://' . $self->{server} . $self->{path} . "?";
-  $query .= "api_user=" . uri_escape($self->{username}) . "&api_key=" . uri_escape($self->{password});
+  if ( defined($self->{username}) )
+  {
+    $query .= "api_user=" . uri_escape($self->{username}) . "&api_key=" . uri_escape($self->{password});
+  }
 
   # Add recipients
   foreach my $i ( 0..(scalar(@$toAddr)-1) )
@@ -150,6 +163,10 @@ sub send
 
   my $ua = LWP::UserAgent->new( timeout => $self->{timeout}, agent => 'sendgrid/' . $VERSION . ';perl' );
 
+  if ( defined($self->{api_key}) )
+  {
+    $ua->default_header('Authorization' => "Bearer $self->{api_key}");
+  } 
   my $response = $ua->get($query);
 
   return { errors => [ $response->status_line() ] } if ( !$response->is_success );
@@ -244,6 +261,10 @@ Your SendGrid username
 =item password
 
 Your SendGrid password
+
+=item api_key
+
+Your SendGrid API key
 
 =item server
 

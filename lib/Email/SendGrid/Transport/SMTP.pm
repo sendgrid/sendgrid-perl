@@ -28,10 +28,23 @@ sub new
     $self->{domain} = hostname();
   }
 
-  croak "username must be specified" if ( !defined($self->{username}) );
-  croak "password must be specified" if ( !defined($self->{password}) );
   croak "TLS is required for port 587" if ( !$self->{tls} && $self->{port} == 587 );
 
+  if ( defined($self->{username}) && defined($self->{api_key}) )
+  {
+    die "Must only specify username/password or api key, not both";
+  }
+
+  if ( !(defined($self->{username}) && defined($self->{password})) && !defined($self->{api_key}) )
+  {
+    die "Must speicfy username/password or api key";
+  }
+
+  if ( defined($self->{api_key}) )
+  {
+    $self->{username} = "apikey";
+    $self->{password} = delete $self->{api_key};
+  }  
   return $self;
 }
 
@@ -124,6 +137,10 @@ Your SendGrid username
 =item password
 
 Your SendGrid password
+
+=item api_key
+
+Your SendGrid API key
 
 =item server
 
