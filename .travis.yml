@@ -1,7 +1,17 @@
 language: perl
 perl:
-  - "5.20"
-  - "5.18"
-  - "5.16"
-  - "5.14"
-  - "5.8"
+- '5.20'
+- '5.18'
+- '5.16'
+- '5.14'
+- '5.8'
+notifications:
+  hipchat:
+    rooms:
+      secure: nGaR7tHknJd4k0dDSR3mK4BuD1Amt8rLVNyUW5cPxNzPcJMMHQcEZ22zk5qzOW8cA9n3JgjjyesfRVSr/wiLnNjurIy8el3EIqXGp3qfQ4WNtVTJpR6QLqwd+ukwHSn+jloXbLCgkXwWXN7bEQXSyF8D9nOwTF/waZDqzryf/PU=
+    template:
+    - '<a href="https://travis-ci.org/%{repository}/builds/%{build_id}">%{repository}
+      Build %{build_number}</a> on branch <i>%{branch}</i> by %{author}: <strong>%{message}</strong>
+      <a href="https://github.com/sendgrid/docs/commits/%{commit}">View on GitHub</a>'
+    format: html
+    notify: true
