@@ -46,6 +46,27 @@ sub delivery : Test()
   is($res, undef, 'normal delivery');
 }
 
+sub create : Test(no_plan)
+{
+  eval {
+    my $trans = Email::SendGrid::Transport::SMTP->new( username => 'u' );
+  };
+  ok($@ =~ /Must speicfy username\/password or api key at/, "only providing username generated error");
+
+  eval {
+    my $trans = Email::SendGrid::Transport::SMTP->new( password => 'u' );
+  };
+  ok($@ =~ /Must speicfy username\/password or api key at/, "only providing password generated error");
+
+  eval {
+    my $trans = Email::SendGrid::Transport::SMTP->new( username => 'u', api_key => 'k' );
+  };
+  ok($@ =~ /Must only specify username\/password or api key, not both at/, "providing username and api key generated error");
+
+  my $trans = Email::SendGrid::Transport::SMTP->new( api_key => 'k' );
+  is($trans->{username}, 'apikey', "username set to apikey");
+  is($trans->{password}, 'k', 'password set to apikey value')
+}
 ###################################################################################################
 # Tests for the SMTP transaction
 sub connection_refused : Test()
