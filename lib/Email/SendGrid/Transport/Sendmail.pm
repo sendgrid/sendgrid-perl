@@ -5,7 +5,7 @@ package Email::SendGrid::Transport::Sendmail;
 use strict;
 use vars qw($VERSION);
 
-$VERSION = '1.2';
+$VERSION = '1.3';
 
 use Sys::Hostname;
 use Carp;

@@ -15,7 +15,7 @@ meantime, you can install from the included archive.
 
     git clone https://github.com/sendgrid/sendgrid-perl.git
     cd sendgrid-perl
-    sudo cpanm SendGrid-1.2.tar.gz
+    sudo cpanm SendGrid-1.3.tar.gz
 
 You can also build the archive yourself:
     
@@ -25,6 +25,9 @@ You can also build the archive yourself:
     make dist
 
 #Basic usage
+
+For authentication, please use either your SendGrid credentials or an [API key](https://sendgrid.com/docs/User_Guide/Account/api_keys.html).
+
 ```perl
 use warnings;
 use strict;
