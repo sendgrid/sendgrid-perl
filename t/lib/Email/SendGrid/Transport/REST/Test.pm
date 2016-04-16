@@ -134,12 +134,13 @@ sub deliver : Test(no_plan)
   is($res, undef, 'normal delivery');
 }
 
-sub unicode : Test(8)
+sub unicode : Test(9)
 {
   my $deliv;
   my $sg;
 
   my $u = "\x{587}";
+  my $binaryAttachData = chr(0xE4);
 
   $deliv = getTransport( 'send' => sub {
     my $self = shift;
@@ -164,6 +165,7 @@ sub unicode : Test(8)
     is($p->{text}, $sg->get('text', encode => 1), "unicode text set");
     is($p->{'to[]'}, $toAddr, "unicode to addr set");
     is($p->{'toname[]'}, encode('utf-8', "$u$toName"), "unicode to name set");
+    is($p->{"files[attachment1]"}, $binaryAttachData, "attachment included");
 
     return { "message" => "success" };
   });
@@ -171,6 +173,7 @@ sub unicode : Test(8)
   $sg = getSGObject(unicode => $u);
 
   $sg->header->setCategory("$u");
+  $sg->addAttachment($binaryAttachData);
 
   my $res = $deliv->deliver($sg);
 }
