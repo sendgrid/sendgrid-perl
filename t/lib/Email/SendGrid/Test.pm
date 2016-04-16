@@ -257,7 +257,7 @@ sub unicode : Test(7)
   my $mText = $parts[0]->bodyhandle->as_string();
   my $mHtml = $parts[1]->bodyhandle->as_string();
 
-  ok( $mText ne $text && decode($charset, $mText) eq $text, 'unicode text portion correctly enocded');
+  ok( $mText ne $text && decode($charset, $mText) eq $text, 'unicode text portion correctly encoded');
   ok( $mHtml ne $html && decode($charset, $mHtml) eq $html, 'unicode html portion correctly encoded');
 
   # Test unicode headers

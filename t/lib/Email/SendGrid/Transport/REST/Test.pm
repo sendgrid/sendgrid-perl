@@ -74,12 +74,12 @@ sub create : Test(no_plan)
   eval {
     my $trans = Email::SendGrid::Transport::REST->new( username => 'u' );
   };
-  ok($@ =~ /Must speicfy username\/password or api key at/, "only providing username generated error");
+  ok($@ =~ /Must specify username\/password or api key at/, "only providing username generated error");
 
   eval {
     my $trans = Email::SendGrid::Transport::REST->new( password => 'u' );
   };
-  ok($@ =~ /Must speicfy username\/password or api key at/, "only providing password generated error");
+  ok($@ =~ /Must specify username\/password or api key at/, "only providing password generated error");
 
   eval {
     my $trans = Email::SendGrid::Transport::REST->new( username => 'u', api_key => 'k' );
@@ -165,7 +165,7 @@ sub unicode : Test(9)
     is($p->{text}, $sg->get('text', encode => 1), "unicode text set");
     is($p->{'to[]'}, $toAddr, "unicode to addr set");
     is($p->{'toname[]'}, encode('utf-8', "$u$toName"), "unicode to name set");
-    is($p->{"files[attachment1]"}, $binaryAttachData, "attachment included");
+    is($p->{'files[attachment1]'}, $binaryAttachData, "binary attachment included");
 
     return { "message" => "success" };
   });
