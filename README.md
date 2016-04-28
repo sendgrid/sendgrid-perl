@@ -1,3 +1,9 @@
+**IMPORTANT ANNOUNCEMENT**
+
+**As of May 1, 2016, SendGrid will no longer support this library.**
+
+Please direct any questions to the [Developer Experience](mailto:dx@sendgrid.com) team.
+
 [![Build Status](https://travis-ci.org/sendgrid/sendgrid-perl.png?branch=master)](https://travis-ci.org/sendgrid/sendgrid-perl)
 
 #sendgrid-perl
