@@ -201,18 +201,23 @@ sub send_up : Test(no_plan)
   $mm->mock('new' => sub {
     $obj = Test::MockObject->new();
     $obj->set_always('default_header' => 1);
-    $obj->mock('get' => sub { return $response } );
+    $obj->mock('request' => sub { return $response } );
     return $obj;
     });
 
-  my $query = "query";
-  my $resp = $deliv->send($query);
+  my $query = 'url?data';
+
+  my $req = HTTP::Request->new('POST', 'url');
+  $req->content_type('application/x-www-form-urlencoded');
+  $req->content('data');
+
+  my $resp  = $deliv->send($query);
 
   cmp_deeply($resp, $content, "sent");
   my ($func, $args) = $obj->next_call();
-  is($func, 'get', "made call to get");
+  is($func, 'request', "made call to request");
   shift(@$args);
-  cmp_deeply($args, [$query], " with proper args");
+  cmp_deeply($args, [$req], " with proper args");
   
   ($func, $args) = $obj->next_call();
   is($func, undef, "all lwp calls accounted for");
@@ -222,9 +227,9 @@ sub send_up : Test(no_plan)
   cmp_deeply($resp, {errors => ['403 bad error']}, "error returned" );
 
   ($func, $args) = $obj->next_call();
-  is($func, 'get', "made call to get");
+  is($func, 'request', "made call to request");
   shift(@$args);
-  cmp_deeply($args, [$query], " with proper args");
+  cmp_deeply($args, [$req], " with proper args");
   
   ($func, $args) = $obj->next_call();
   is($func, undef, "all lwp calls accounted for");
@@ -241,12 +246,17 @@ sub send_apikey : Test(no_plan)
   $mm->mock('new' => sub {
     $obj = Test::MockObject->new();
     $obj->set_always('default_header' => 1);
-    $obj->mock('get' => sub { return $response } );
+    $obj->mock('request' => sub { return $response } );
     return $obj;
     });
 
-  my $query = "query";
-  my $resp = $deliv->send($query);
+  my $query = 'url?data';
+
+  my $req = HTTP::Request->new('POST', 'url');
+  $req->content_type('application/x-www-form-urlencoded');
+  $req->content('data');
+
+  my $resp  = $deliv->send($query);
 
   cmp_deeply($resp, $content, "sent");
   my ($func, $args) = $obj->next_call();
@@ -254,10 +264,10 @@ sub send_apikey : Test(no_plan)
   shift(@$args);
   cmp_deeply($args,['Authorization','Bearer k'], " with proper api key header");
 
-  ($func, $args) = $obj->next_call();  
-  is($func, 'get', "made call to get");
+  ($func, $args) = $obj->next_call();
+  is($func, 'request', "made call to request");
   shift(@$args);
-  cmp_deeply($args, [$query], " with proper args");
+  cmp_deeply($args, [$req], " with proper args");
   
   ($func, $args) = $obj->next_call();
   is($func, undef, "all lwp calls accounted for");
@@ -272,9 +282,9 @@ sub send_apikey : Test(no_plan)
   cmp_deeply($args,['Authorization','Bearer k'], " with proper api key header");
 
   ($func, $args) = $obj->next_call();
-  is($func, 'get', "made call to get");
+  is($func, 'request', "made call to request");
   shift(@$args);
-  cmp_deeply($args, [$query], " with proper args");
+  cmp_deeply($args, [$req], " with proper args");
   
   ($func, $args) = $obj->next_call();
   is($func, undef, "all lwp calls accounted for");

@@ -161,13 +161,22 @@ sub send
   my $self = shift;
   my $query = shift;
 
+  # Split the url and the data from the query string
+  # to make a POST request with data in the body
+  my ($url, $data) = $query =~ /^([^\?]+)\?(.*)$/;
+
   my $ua = LWP::UserAgent->new( timeout => $self->{timeout}, agent => 'sendgrid/' . $VERSION . ';perl' );
 
   if ( defined($self->{api_key}) )
   {
     $ua->default_header('Authorization' => "Bearer $self->{api_key}");
-  } 
-  my $response = $ua->get($query);
+  }
+
+  my $req = HTTP::Request->new('POST', $url);
+  $req->content_type('application/x-www-form-urlencoded');
+  $req->content($data);
+
+  my $response = $ua->request($req);
 
   return { errors => [ $response->status_line() ] } if ( !$response->is_success );
 
