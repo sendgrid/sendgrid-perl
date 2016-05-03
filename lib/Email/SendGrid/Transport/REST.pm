@@ -34,7 +34,7 @@ sub new
 
   if ( !(defined($self->{username}) && defined($self->{password})) && !defined($self->{api_key}) )
   {
-    die "Must speicfy username/password or api key";
+    die "Must specify username/password or api key";
   }
 
   return $self;
@@ -140,7 +140,7 @@ sub deliver
     }
     my @path = split('/', $filename);
     my $file = $path[$#path];
-    $query .= "&files[" . uri_escape(encode('utf8', $file)) . "]=" . uri_escape(encode('utf8', $data));
+    $query .= "&files[" . uri_escape(encode('utf8', $file)) . "]=" . uri_escape($data);
   }
 
   # Other headers (currently just message-id)
